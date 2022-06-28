@@ -17,3 +17,60 @@ CREATE TABLE usuarios(
     adddate_at TIMESTAMP(0) NOT NULL,
 	update_at TIMESTAMP(0) NOT NULL
 );
+
+CREATE TABLE roles(
+	id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(90) NOT NULL UNIQUE,
+    ruta VARCHAR(180) NOT NULL,
+    created_at TIMESTAMP(0) NOT NULL,
+    updated_at TIMESTAMP(0) NOT NULL
+);
+
+INSERT INTO roles(
+	nombre,
+    ruta,
+    created_at,
+    updated_at
+)
+VALUES(
+	'ADMIN',
+    '/inicio/cliente',
+    '2022-06-24',
+    '2022-06-24'
+);
+
+INSERT INTO roles(
+	nombre,
+    ruta,
+    created_at,
+    updated_at
+)
+VALUES(
+	'USUARIO',
+    '/inicio/cliente',
+    '2022-06-24',
+    '2022-06-24'
+);
+
+INSERT INTO roles(
+	nombre,
+    ruta,
+    created_at,
+    updated_at
+)
+VALUES(
+	'CAJERO',
+    '/inicio/cajero',
+    '2022-06-24',
+    '2022-06-24'
+);
+
+CREATE TABLE usuario_has_roles(
+	id_usuario BIGINT NOT NULL,
+    id_rol BIGINT NOT NULL,
+	created_at TIMESTAMP(0) NOT NULL,
+    updated_at TIMESTAMP(0) NOT NULL,
+    FOREIGN KEY(id_usuario) REFERENCES usuarios(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY(id_rol) REFERENCES roles(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    PRIMARY KEY(id_usuario, id_rol)
+);
