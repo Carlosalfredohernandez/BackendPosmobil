@@ -81,11 +81,25 @@ module.exports = {
                 });
             }
 
-            return res.status(201).json({
-                success: true,
-                menssage: 'El registro se realizo correctamente',
-                data: data
-            
+            user.id = `${data}`;
+            const token = jwt.sign({id: user.id, correo: user.correo}, Keys.secretOrKey, {});
+            user.session_token = `JWT ${token}`;
+
+            Rol.create(user.id, 3, (err, data) => {
+                
+                if (err) {
+                    return res.status(501).json({
+                        success: false,
+                        message: 'Hubo un error con el registro del rol de usuario',
+                        error: err
+                    });
+                }
+                
+                return res.status(201).json({
+                    success: true,
+                    message: 'El registro se realizo correctamente',
+                    data: user
+                });
 
             });
 
