@@ -1,5 +1,6 @@
 const { findByRut } = require('../models/user');
 const User = require('../models/user');
+const Rol = require('../models/rol');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Keys = require('../config/keys');
@@ -42,7 +43,8 @@ module.exports = {
                     nombre: myUser.nombre,
                     rut: myUser.rut,
                     correo: myUser.correo,
-                    session_token: `JWT ${token}`
+                    session_token: `JWT ${token}`,
+                    roles: myUser.roles
                 }
 
                 return res.status(201).json({
@@ -85,7 +87,7 @@ module.exports = {
             const token = jwt.sign({id: user.id, correo: user.correo}, Keys.secretOrKey, {});
             user.session_token = `JWT ${token}`;
 
-            Rol.create(user.id, 3, (err, data) => {
+            Rol.create(user.id, 2, (err, data) => {
                 
                 if (err) {
                     return res.status(501).json({

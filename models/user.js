@@ -7,15 +7,32 @@ User.findById = (id, result) => {
 
     const sql =`
     SELECT
-        id,
-        nombre,
-        rut,
-        email,
-        clave
+	    U.id,
+	    U.nombre,
+	    U.rut,
+	    U.email,
+	    U.clave,
+        JSON_ARRAYAGG(
+		    JSON_OBJECT(
+			    'id', R.id,
+                'nombre', R.nombre,
+                'ruta', R.ruta
+            )
+        ) AS roles
     FROM
-        usuarios
+	    usuarios AS U
+    INNER JOIN
+	    usuario_has_roles AS UHR
+    ON
+	    UHR.id_usuario = U.id
+    INNER JOIN
+	    roles AS R
+    ON
+	    UHR.id_rol = R.id
     WHERE
-        rut = ?
+	    id = ?
+    GROUP BY
+	    U.id
     `;
 
     db.query(
@@ -40,15 +57,32 @@ User.findByRut = (rut, result) => {
 
     const sql =`
     SELECT
-        id,
-        nombre,
-        rut,
-        email,
-        clave
+	    U.id,
+	    U.nombre,
+	    U.rut,
+	    U.email,
+	    U.clave,
+        JSON_ARRAYAGG(
+		    JSON_OBJECT(
+			    'id', R.id,
+                'nombre', R.nombre,
+                'ruta', R.ruta
+            )
+        ) AS roles
     FROM
-        usuarios
+	    usuarios AS U
+    INNER JOIN
+	    usuario_has_roles AS UHR
+    ON
+	    UHR.id_usuario = U.id
+    INNER JOIN
+	    roles AS R
+    ON
+	    UHR.id_rol = R.id
     WHERE
-        rut = ?
+	    rut = ?
+    GROUP BY
+	    U.id
     `;
 
     db.query(
