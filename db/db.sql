@@ -74,3 +74,30 @@ CREATE TABLE usuario_has_roles(
     FOREIGN KEY(id_rol) REFERENCES roles(id) ON UPDATE CASCADE ON DELETE CASCADE,
     PRIMARY KEY(id_usuario, id_rol)
 );
+
+CREATE TABLE UsuariosEmpresa(
+	id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    empresa VARCHAR(90) NOT NULL UNIQUE,
+    local_asignado integer NOT NULL,
+    nombre_usuario VARCHAR(180) NOT NULL,
+    rol VARCHAR(90) NOT NULL,
+    created_at TIMESTAMP(0) NOT NULL,
+    updated_at TIMESTAMP(0) NOT NULL
+);
+
+VIEW ConsultaInventarioGeneral(
+    USE tecnoalsa_server;
+    SELECT     
+	    I.codigo_producto AS id_producto,
+        SUM(I.cantidad) AS cantidad,
+        P.nombre_producto AS nombre,
+        P.codigo_barra AS codigo_producto
+    FROM 
+	    inventario AS I
+    INNER JOIN
+	    productos AS P
+    ON
+	        I.codigo_producto = P.id
+    GROUP BY 
+	    codigo_producto
+);
