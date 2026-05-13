@@ -1,10 +1,20 @@
 const { findByRut } = require('../models/user');
 const User = require('../models/user');
 const Rol = require('../models/rol');
+
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Keys = require('../config/keys');
 //const User = require('../models/User');
+
+// Normaliza roles: si es string lo parsea, si ya es array/objeto lo deja igual
+function normalizeRoles(roles) {
+    if (!roles) return [];
+    if (typeof roles === 'string') {
+        try { return JSON.parse(roles); } catch { return []; }
+    }
+    return roles;
+}
 
 function login(req, res) {
     const rut = req.body.rut;
@@ -39,7 +49,7 @@ function login(req, res) {
                 telefono: myUser.telefono,
                 session_token: `JWT ${token}`,
                 tipo_contrato: myUser.tipo_contrato,
-                roles: JSON.parse(myUser.roles)
+                roles: normalizeRoles(myUser.roles)
             }
             console.log('Usuario enviado al front (login):', data);
             return res.status(201).json({
@@ -69,7 +79,7 @@ function findUsers(req , res) {
             });
         }
         data.forEach(user => {
-            user.roles = JSON.parse(user.roles);
+            user.roles = normalizeRoles(user.roles);
         });
         console.log('Usuarios enviados al front (findUsers):', data);
         return res.status(201).json(data);
@@ -156,7 +166,7 @@ async function update(req, res) {
                 });
             }
             myData.session_token = user.session_token;
-            myData.roles = JSON.parse(myData.roles);
+            myData.roles = normalizeRoles(myData.roles);
             console.log('Usuario enviado al front (update):', myData);
             return res.status(201).json({
                 success: true,
