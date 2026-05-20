@@ -93,7 +93,24 @@ module.exports= {
             return res.status(201).json(data);
         });
     },
+        delete(req, res) {
+            const id = req.params.id;
 
+            UserE.delete(id, (err, data) => {
+                if (err) {
+                    return res.status(501).json({
+                        success: false,
+                        message: 'Hubo un error al eliminar el usuario',
+                        error: err
+                    });
+                }
+                return res.status(200).json({
+                    success: true,
+                    message: 'Usuario eliminado correctamente',
+                    data: data
+                });
+            });
+        },
     async update(req, res) {
 
         console.log('REQ BODY:', req.body);

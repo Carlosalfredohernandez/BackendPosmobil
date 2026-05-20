@@ -4,44 +4,6 @@ const UserE = {};
 
 UserE.create = async (user, result) => {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     console.log('Datos recibidos para crear usuario:', user); // 👈 Log para debug
 
     const hash = await bcrypt.hash(user.password, 10);
@@ -194,5 +156,22 @@ UserE.findUsers = (usuario,result) => {
 
     )
 }
-
+UserE.delete = (id, result) => {
+    const sql = `
+        DELETE FROM usuariosempresa
+        WHERE id = ?
+    `;
+    db.query(
+        sql,
+        [id],
+        (err, res) => {
+            if (err) {
+                console.log('Error:', err);
+                result(err, null);
+            } else {
+                result(null, res);
+            }
+        }
+    );
+};
 module.exports = UserE;
